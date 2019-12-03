@@ -27,9 +27,6 @@ jobs:
             docker build --build-arg VERSION_TAG=$VERSION_TAG -t istresearch/mailroom:${VERSION_TAG} -f Dockerfile .
             docker push istresearch/mailroom:${VERSION_TAG}
 
-            if [[ $BRANCH == develop ]]; then
-              docker push istresearch/mailroom:ci-develop
-            fi
       - run:
           name: Deploy
           command: |
