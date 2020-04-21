@@ -12,7 +12,7 @@ jobs:
           command: |
             apk add --update python openssh git curl
             BRANCH=${CIRCLE_BRANCH#*/}
-            source VERSION
+            source ./VERSION
             FROM_RP_TAG=v5.0.0
             if [[ ! -z $CIRCLE_TAG ]]; then
               VERSION_TAG="${VERSION}"
