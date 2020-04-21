@@ -12,7 +12,7 @@ jobs:
           command: |
             apk add --update python openssh git curl
             BRANCH=${CIRCLE_BRANCH#*/}
-            VERSION=`cat VERSION`
+            source ./VERSION
             FROM_RP_TAG=v5.0.0
             if [[ ! -z $CIRCLE_TAG ]]; then
               VERSION_TAG="${VERSION}"
@@ -24,8 +24,13 @@ jobs:
             docker login -u $DOCKER_USER -p $DOCKER_PASS
 
             # Build the container with default branding
-            docker build --build-arg VERSION_TAG=$VERSION_TAG -t istresearch/mailroom:${VERSION_TAG} -f Dockerfile .
+            docker build --build-arg MAILROOM_VERSION=$MAILROOM_VERSION -t istresearch/mailroom:${VERSION_TAG} -f Dockerfile .
             docker push istresearch/mailroom:${VERSION_TAG}
+
+            if [[ $BRANCH == develop ]]; then
+              docker tag istresearch/mailroom:${VERSION_TAG} istresearch/mailroom:ci-develop
+              docker push istresearch/mailroom:ci-develop
+            fi
 
       - run:
           name: Deploy
